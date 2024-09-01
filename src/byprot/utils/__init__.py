@@ -19,7 +19,7 @@ import torch
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning import (Callback, LightningDataModule, LightningModule)
 from pytorch_lightning.utilities.seed import isolate_rng
-from pytorch_lightning.loggers import LightningLoggerBase, TensorBoardLogger
+from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.utilities import rank_zero_only
 
 from . import strategies
@@ -146,7 +146,7 @@ def log_hyperparameters(
     datamodule: pl.LightningDataModule,
     trainer: pl.Trainer,
     callbacks: List[pl.Callback],
-    logger: List[pl.loggers.LightningLoggerBase],
+    logger: List,
 ) -> None:
     """Controls which config parts are saved by Lightning loggers.
 
@@ -193,7 +193,7 @@ def finish(
     datamodule: pl.LightningDataModule,
     trainer: pl.Trainer,
     callbacks: List[pl.Callback],
-    logger: List[pl.loggers.LightningLoggerBase],
+    logger: List,
 ) -> None:
     """Makes sure everything closed properly."""
 
@@ -216,7 +216,7 @@ def common_pipeline(config, training=False):
     pl_module: LightningModule = instantiate_from_config(cfg=config.task, group='task', model=config.model)
 
     # Init lightning loggers
-    logger: List[LightningLoggerBase] = []
+    logger: List = []
     if "logger" in config:
         for _, lg_conf in config.logger.items():
             if "_target_" in lg_conf:
