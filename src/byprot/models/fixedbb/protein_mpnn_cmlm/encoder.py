@@ -18,6 +18,7 @@ import random
 import itertools
 
 from .features import ProteinFeatures, gather_nodes, cat_neighbors_nodes, PositionWiseFeedForward
+from .decoder import DecLayer
 
 
 class EncLayer(nn.Module):
@@ -207,6 +208,8 @@ class ProteinMPNNEncoder(StructureEncoder):
         if self.use_decoder:
             logits = self.W_out(h_V)
             return logits
+        else:
+            return h_V
 
     def _forward(self, X, S, mask, chain_M, residue_idx, chain_encoding_all, randn, use_input_decoding_order=False, decoding_order=None):
         """ Graph-conditioned sequence model """
